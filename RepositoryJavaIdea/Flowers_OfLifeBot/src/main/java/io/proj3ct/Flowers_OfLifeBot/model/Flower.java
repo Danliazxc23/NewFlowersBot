@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class Flower {
-    private  final int price;
+    private  final int x;
+    private  final int y;
 
 }
