@@ -1,7 +1,6 @@
 package io.pro3ct.FlowersBot;
 
 import io.pro3ct.FlowersBot.AppConfig.BotConfig;
-import io.pro3ct.FlowersBot.model.Bouquet;
 import io.pro3ct.FlowersBot.service.CreateStartMenu;
 import io.pro3ct.FlowersBot.service.StartMenu;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
 
 
 @Component
@@ -30,6 +24,8 @@ public class MyFlowersTelegramBot extends TelegramLongPollingBot {
     private final BotConfig botConfig;
     @Autowired
     private final CreateStartMenu menu;
+
+
 
     @Autowired
     private final StartMenu startMenu;
@@ -78,60 +74,27 @@ public class MyFlowersTelegramBot extends TelegramLongPollingBot {
     }
 
 
-
-
-    public List<Bouquet> createBouquet() {
-        List<Bouquet> bouquetList = new ArrayList<>();
-
-        // Инициализация первого букета
-        Bouquet bouquet1 = new Bouquet();
-        bouquet1.setName("Розы");
-        bouquet1.setPrice(1000);
-        bouquet1.setDescription("Букет из 10 роз разных цветов");
-        bouquet1.setImagePath("scr/static/img/flowers1.jpg");
-
-        // Инициализация второго букета
-        Bouquet bouquet2 = new Bouquet();
-        bouquet2.setName("Тюльпаны");
-        bouquet2.setPrice(800);
-        bouquet2.setDescription("Букет из 15 тюльпанов");
-        bouquet2.setImagePath("scr/static/img/flowers1.jpg");
-
-        // Добавление букетов в список
-        bouquetList.add(bouquet1);
-        bouquetList.add(bouquet2);
-        log.info("создали букеты");
-        return bouquetList;
-    }
     public void sendBouquetImage(long chatId, String imagePath) throws FileNotFoundException {
-        String src="src/main/resources/static/img/flowers1.jpg";
-        InputStream imageStream = new FileInputStream(src);
-        InputFile inputFile = new InputFile(imageStream, "flowers1.jpg");
-        FileInputStream fileInputStream=new FileInputStream("src/main/resources/static/img/flowers1.jpg");
-        InputFile file=new InputFile(fileInputStream,"flowers1.jpg");
+        //получаем название фотографии и оправляем ее через внутренний метод execute
+        File imageFile = new File(imagePath);
+        String imgPhoto = imageFile.getName();
+
+        InputStream imageStream = new FileInputStream(imageFile);
+        InputFile inputFile = new InputFile(imageStream, imgPhoto);
+
 
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setPhoto(inputFile);
 
         sendPhoto.setChatId(String.valueOf(chatId));
 
-
-
-        List<Bouquet> bouquetList=createBouquet();
-        SendMessage message=new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText(bouquetList.toString());//нужно переопределить метод toString
-
         try {
-                execute(message);
-                log.info("отправляем данные о букетах");
-                execute(sendPhoto);
-                log.info("отправляем фотки букетов");
+            execute(sendPhoto);
+            log.info("отправляем фотки букетов");
         } catch (TelegramApiException e) {
             e.printStackTrace();
         } finally {
             try {
-                assert imageStream != null;
                 imageStream.close();
             } catch (IOException e) {
                 e.printStackTrace();

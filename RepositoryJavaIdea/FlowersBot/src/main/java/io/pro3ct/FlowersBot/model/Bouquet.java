@@ -16,10 +16,10 @@ public class Bouquet {
     private int price;
     private String description;
 
-    private String ImagePath;
+
 
     public String toString(){
-        return getName()+" "+ getPrice() + " " + getDescription();
+        return getName()+"\n\n\uD83D\uDCB0"+ getPrice() + "\n\n" + getDescription() + "\n\n\uD83D\uDE9A Товар с доставкой";
     }
 }
 

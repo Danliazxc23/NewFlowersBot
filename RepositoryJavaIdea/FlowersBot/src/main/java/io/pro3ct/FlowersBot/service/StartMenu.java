@@ -15,15 +15,24 @@ public class StartMenu {
 
     private MyFlowersTelegramBot bot;
 
-    public StartMenu(@Lazy MyFlowersTelegramBot bot){
+    private CreateBoxPay boxPay;
+    private CreateNewBouquet createNewBouquet;
+
+    public StartMenu(@Lazy MyFlowersTelegramBot bot, CreateBoxPay boxPay, CreateNewBouquet createNewBouquet){
         this.bot=bot;
+        this.boxPay = boxPay;
+        this.createNewBouquet = createNewBouquet;
     }
     public void handleButtonPress(long chatId, String buttonText) throws TelegramApiException, FileNotFoundException {
         switch (buttonText) {
             case "Товар":
                 // Логика для обработки нажатия кнопки "Товар"
                 log.info("Зашли в товар:");
-                bot.sendBouquetImage(chatId,"src/main/resources/static/img/flowers1.jpg");
+                for (int i=1;i<=2; i++) {
+                    bot.sendBouquetImage(chatId, "src/main/resources/static/img/flowers"+i+".jpg");
+                    createNewBouquet.createBouquet(i,chatId);
+                    boxPay.create(chatId);
+                }
                 break;
             case "О нас":
                 // Логика для обработки нажатия кноп
