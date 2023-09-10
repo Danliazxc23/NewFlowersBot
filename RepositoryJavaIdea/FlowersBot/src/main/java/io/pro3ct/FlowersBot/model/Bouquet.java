@@ -10,11 +10,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-
 public class Bouquet {
 
     private String name;
     private int price;
     private String description;
+
+    private String ImagePath;
+
+    public String toString(){
+        return getName()+" "+ getPrice() + " " + getDescription();
+    }
 }
+
