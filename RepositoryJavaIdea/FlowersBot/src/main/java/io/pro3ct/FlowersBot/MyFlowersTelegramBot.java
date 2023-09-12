@@ -20,14 +20,9 @@ import java.io.*;
 @Component
 @Slf4j
 public class MyFlowersTelegramBot extends TelegramLongPollingBot {
-    @Autowired
+    
     private final BotConfig botConfig;
-    @Autowired
     private final CreateStartMenu menu;
-
-
-
-    @Autowired
     private final StartMenu startMenu;
 
     public MyFlowersTelegramBot(BotConfig botConfig, CreateStartMenu menu, StartMenu startMenu) {
